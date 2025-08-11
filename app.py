@@ -102,7 +102,7 @@ def extract_text_url(urls):
     print(f"Searching For {query} on WEB.....") 
 
     content = []
-    for url in urls[]:
+    for url in urls:
         try:
             response = requests.get(url, timeout=10, headers={
                 "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64)"
@@ -382,6 +382,7 @@ st.subheader(f"Recent Cyber Attacks and Breaches 🛡️")
 for i, title in enumerate(titles[:30],1):
     st.write(f"🔴({i})--> {title}")
             
+
 
 
 

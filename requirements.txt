@@ -1,4 +1,5 @@
 googlesearch-python
+feedparser
 langchain
 langchain-community
 sentence-transformers
@@ -7,4 +8,5 @@ google-generativeai
 pydantic
 selenium
 python-docx
+
 urllib3

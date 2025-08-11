@@ -1,3 +1,4 @@
+torch
 googlesearch-python
 feedparser
 langchain
@@ -10,3 +11,4 @@ selenium
 python-docx
 
 urllib3
+

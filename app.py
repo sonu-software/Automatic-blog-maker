@@ -3,6 +3,7 @@ import re
 import streamlit as st
 import concurrent.futures
 import torch
+from urllib3.util.retry import Retry
 
 
 from googlesearch import search
@@ -395,6 +396,7 @@ st.subheader(f"Recent Cyber Attacks and Breaches 🛡️")
 for i, title in enumerate(titles[:30],1):
     st.write(f"{i}.🔴 {title}")
             
+
 
 
 

@@ -50,8 +50,8 @@ import time
 
 #embedding_model_name = "sentence-transformers/all-MiniLM-L6-v2"
 embedding_model_name ="BAAI/bge-base-en-v1.5"
-#embedding_model_name = "BAAI/bge-base-en-v1.5"
-model_sentence = SentenceTransformer(embedding_model_name)
+
+model_sentence = SentenceTransformer(embedding_model_name, device="cpu", torch_dtype=torch.float32 )
 
 #compression and reranker model of the embedding
 cross_encoder_model = HuggingFaceCrossEncoder(model_name="BAAI/bge-reranker-base",model_kwargs={"device": "cpu"})
@@ -382,6 +382,7 @@ st.subheader(f"Recent Cyber Attacks and Breaches 🛡️")
 for i, title in enumerate(titles[:30],1):
     st.write(f"🔴({i})--> {title}")
             
+
 
 
 

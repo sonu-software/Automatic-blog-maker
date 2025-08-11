@@ -105,19 +105,29 @@ def extract_text_url(urls):
     print(f"Searching For {query} on WEB.....") 
 
     content = []
+    session = requests.Session()
+    retry_strategy = Retry(
+        total=3,
+        backoff_factor=1,
+        status_forcelist=[429, 500, 502, 503, 504],
+        allowed_methods=["HEAD", "GET", "OPTIONS"])
+    
+    adapter = HTTPAdapter(max_retries=retry_strategy)
+    session.mount("https://", adapter)
+    session.mount("http://", adapter)
     for url in urls:
         try:
-            response = requests.get(url, timeout=10, headers={
+            response = session.get(url, timeout=10, headers={
                 "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64)"
             })
-            time.sleep(4) 
+            time.sleep(4)
             
             if response.status_code == 200:
                 soup = BeautifulSoup(response.text, 'html.parser')
                 
                 # Extract visible body text
                 body = soup.body.get_text(separator=' ', strip=True) if soup.body else ''
-                content.append(body)
+                content.append(body[:6000])
             else:
                 print(f"Failed to retrieve {url} with status code: {response.status_code}")
 
@@ -383,8 +393,9 @@ if st.button(f"Generate Blog.. ✍️"):
 
 st.subheader(f"Recent Cyber Attacks and Breaches 🛡️")
 for i, title in enumerate(titles[:30],1):
-    st.write(f"🔴({i})--> {title}")
+    st.write(f"{i}.🔴 {title}")
             
+
 
 
 

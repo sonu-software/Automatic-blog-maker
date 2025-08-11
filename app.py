@@ -400,10 +400,11 @@ if st.button(f"Generate Blog.. ✍️"):
                 st.exception(e)
 
 
-st.subheader(f"Recent Cyber Attacks and Breaches 🛡️")
-for i, title in enumerate(titles[:30],1):
+st.subheader(f"🛡️ Recent Cyber Attacks and Breaches 🛡️")
+for i, title in enumerate(titles,1):
     st.write(f"{i}.🔴- {title}")
             
+
 
 
 

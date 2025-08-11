@@ -1,4 +1,6 @@
 torch
+faiss-cpu
+
 googlesearch-python
 feedparser
 langchain
@@ -12,5 +14,6 @@ python-docx
 requests
 beautifulsoup4
 urllib3
+
 
 

@@ -9,6 +9,8 @@ google-generativeai
 pydantic
 selenium
 python-docx
-
+requests
+beautifulsoup4
 urllib3
+
 

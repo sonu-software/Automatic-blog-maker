@@ -52,7 +52,7 @@ embedding_model_name ="BAAI/bge-base-en-v1.5"
 model_sentence = SentenceTransformer(embedding_model_name)
 
 #compression and reranker model of the embedding
-cross_encoder_model = HuggingFaceCrossEncoder(model_name="BAAI/bge-reranker-base")
+cross_encoder_model = HuggingFaceCrossEncoder(model_name="BAAI/bge-reranker-base",model_kwargs={"device": "cpu"})
 compressor = CrossEncoderReranker(model=cross_encoder_model, top_n=8)
 
 #LLM MOdel "GEMINI"
@@ -367,3 +367,4 @@ st.subheader(f"Recent Cyber Attacks and Breaches 🛡️")
 for i, title in enumerate(titles[:30],1):
     st.write(f"🔴({i})--> {title}")
             
+

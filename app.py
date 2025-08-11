@@ -211,22 +211,22 @@ def get_llm_response(query,reranked_text):
         Include Sections With Same Format:
         ## Title: ##
         
-        ### Brief Summary: ###
+        ### Brief Summary: 
         body text
         
-        ### Attack Description: ###
+        ### Attack Description: 
         body text
         
-        ### Impact on Systems & Users: ###
+        ### Impact on Systems & Users: 
         body text
         
-        ### Technical Description: ###
+        ### Technical Description: 
         body text
         
-        ### Impact Analysis: ###
+        ### Impact Analysis: 
         body text
         
-        ### Remediation Steps(in bulletin points): ###
+        ### Remediation Steps(in bulletin points): 
         body text
         
         Source Material:
@@ -396,8 +396,9 @@ if st.button(f"Generate Blog.. ✍️"):
 
 st.subheader(f"Recent Cyber Attacks and Breaches 🛡️")
 for i, title in enumerate(titles[:30],1):
-    st.write(f"{i}.🔴 {title}")
+    st.write(f"{i}.🔴- {title}")
             
+
 
 
 

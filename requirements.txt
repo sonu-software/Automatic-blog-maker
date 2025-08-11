@@ -1,0 +1,10 @@
+googlesearch-python
+langchain
+langchain-community
+sentence-transformers
+python-dotenv
+google-generativeai
+pydantic
+selenium
+python-docx
+urllib3

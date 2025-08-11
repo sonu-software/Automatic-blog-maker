@@ -130,53 +130,6 @@ def extract_text_url(urls):
     return cleaned_text
 
 #################################################################################################################################################################
-'''
-def extract_text_url(urls):
-    # Setup ChromeDriver
-    options = webdriver.ChromeOptions()
-    options.add_argument("--headless")  # Run in background (no GUI)
-    driver = webdriver.Chrome(options=options)
-    print(f"Searching For {query} on WEB.....")
-    
-    # Getting to all website
-    content=[]
-    for url in urls[:6]:
-        try:
-            driver.get(url)
-            time.sleep(4)  # Wait for content to load
-            
-            # Extract page title
-            title = driver.title
-            print("Page Title:", title)
-            
-            # Print Extracted body text
-            body_text = driver.find_element(By.TAG_NAME, "body").text
-            #print("Body Text :", body_text)
-            #print("#"*60)
-            content.append(body_text)
-
-
-        except urllib3.exceptions.SSLError as e:
-            print(f"SSL error occurred:{url}:- {e}")
-        except WebDriverException as e:
-            print(f"Selenium WebDriver error:{url}:- {e}")
-        except Exception as e:
-            print(f"General error:{url}:- {e}")
-    
-    
-    
-    driver.quit()  # Always close the browser when done
-    text = ''.join(content)
-    cleaned_text = re.sub(r'\s+', ' ', text)
-    cleaned_text = cleaned_text.strip()
-    if cleaned_text:
-        print("extraction successfull")
-    else:
-        print("extraction failed")
-    return cleaned_text
-
-'''
-#################################################################################################################################################################
 
 def chunk_text(cleaned_text):
     text_splitter = RecursiveCharacterTextSplitter(
@@ -194,27 +147,39 @@ def chunk_text(cleaned_text):
 
 
 def vectorstore_retrieval(query, final_chunked_documents):
-    embedding_model= EmbeddingModel(model_sentence)
-    vector_store= FAISS.from_documents(final_chunked_documents, embedding_model)
-    retriever= vector_store.as_retriever(search_type= "similarity", search_kwargs={"k": 20})
-    reranked_text=""
-    compression_retriever= ContextualCompressionRetriever(base_compressor=compressor,base_retriever=retriever)
-    compressed_document= compression_retriever.invoke(f"Title: , Breif: , Attack Description: , Impact on Systems & Users: ,Technical Description: , Impact Analysis: and  Remediation: for {query}")
-    #compressed_document= compression_retriever.get_relevant_documents(f"Details about: {query} ")
-    for doc in compressed_document:
-        reranked_text = reranked_text + doc.page_content
-    return reranked_text
+    try:
+        embedding_model= EmbeddingModel(model_sentence)
+        vector_store= FAISS.from_documents(final_chunked_documents, embedding_model)
+        retriever= vector_store.as_retriever(search_type= "similarity", search_kwargs={"k": 20})
+        reranked_text=""
+        compression_retriever= ContextualCompressionRetriever(base_compressor=compressor,base_retriever=retriever)
+        compressed_document= compression_retriever.invoke(f"Title: , Breif: , Attack Description: , Impact on Systems & Users: ,Technical Description: , Impact Analysis: and  Remediation: for {query}")
+        #compressed_document= compression_retriever.get_relevant_documents(f"Details about: {query} ")
+        for doc in compressed_document:
+            reranked_text = reranked_text + doc.page_content
+        return reranked_text
     
 
+    except ImportError as e:
+        st.error(f"❌ FAISS or dependency not available: {e}")
+        raise
 
+    except Exception as e:
+        st.error(f"❌ Error in vectorstore_retrieval(): {e}")
+        raise
 
 
 def generate_knowledge_base(query):
-    cleaned_text= extract_text_url(urls)
-    final_chunked_documents= chunk_text(cleaned_text)
-    reranked_text= vectorstore_retrieval(query, final_chunked_documents)
-    print("done generating knowledge_base")
-    return reranked_text
+    try:
+        cleaned_text= extract_text_url(urls)
+        final_chunked_documents= chunk_text(cleaned_text)
+        reranked_text= vectorstore_retrieval(query, final_chunked_documents)
+        print("done generating knowledge_base")
+        return reranked_text
+
+    except Exception as e:
+        st.error(f"❌ Error in generate_knowledge_base(): {e}")
+        raise
     
 
 
@@ -222,38 +187,42 @@ def generate_knowledge_base(query):
 
 
 def get_llm_response(query,reranked_text):
-    prompt= f"""
-    Write a 5-6 page detailed blog post using the following source material:
-    {query}
+    try:
+        prompt= f"""
+        Write a 5-6 page detailed blog post using the following source material:
+        {query}
+        
+        Include Sections With Same Format:
+        ## Title: ##
+        
+        ### Brief Summary: ###
+        body text
+        
+        ### Attack Description: ###
+        body text
+        
+        ### Impact on Systems & Users: ###
+        body text
+        
+        ### Technical Description: ###
+        body text
+        
+        ### Impact Analysis: ###
+        body text
+        
+        ### Remediation Steps(in bulletin points): ###
+        body text
+        
+        Source Material:
+        {reranked_text}
+        """
     
-    Include Sections With Same Format:
-    ## Title: ##
-    
-    ### Brief Summary: ###
-    body text
-    
-    ### Attack Description: ###
-    body text
-    
-    ### Impact on Systems & Users: ###
-    body text
-    
-    ### Technical Description: ###
-    body text
-    
-    ### Impact Analysis: ###
-    body text
-    
-    ### Remediation Steps(in bulletin points): ###
-    body text
-    
-    Source Material:
-    {reranked_text}
-    """
+        output= model.generate_content(prompt)
+        return output.text
 
-    output= model.generate_content(prompt)
-    return output.text
-
+    except Exception as e:
+        st.error("❌ Error in get_llm_response():", e)
+        raise
 
 
 
@@ -349,27 +318,31 @@ def create_formatted_doc_from_markdown(text_output):
 
 
 def main(query):
-    print("starting......")
-    # searching all the links from google
-    url= search(query)
-    for i in url:
-        urls.append(i)
+    try:
+        # searching all the links from google
+        url= search(query)
+        for i in url:
+            urls.append(i)
     
-    reranked_text= generate_knowledge_base(query)
-    print(reranked_text)
-    text_output= get_llm_response(query,reranked_text)
+        reranked_text= generate_knowledge_base(query)
+        print(reranked_text)
+        text_output= get_llm_response(query,reranked_text)
 
-    print("done")
-    print(text_output)
-
-    
-
-    docx_buffer=create_formatted_doc_from_markdown(text_output)
-    return text_output, docx_buffer
+        docx_buffer=create_formatted_doc_from_markdown(text_output)
+        return text_output, docx_buffer
+        
+    except Exception as e:
+        st.error(f"❌ Error in main(): {e}")
+        raise
 
 
 def blocking_main(query):
-    return main(query)
+    try:
+        return main(query)
+
+    except Exception as e:
+        st.error(f"❌ Error in blocking_main(): {e}")
+        raise
 
 
 
@@ -381,27 +354,34 @@ if st.button(f"Generate Blog.. ✍️"):
         st.warning("please enter some input")
     else:
         with st.spinner("🕒 Generating your blog... please wait......"):
-            with concurrent.futures.ThreadPoolExecutor() as executor:
-                future = executor.submit(blocking_main, query)
-                text_output, docx_buffer = future.result()
+            try:
+                with concurrent.futures.ThreadPoolExecutor() as executor:
+                    future = executor.submit(blocking_main, query)
+                    text_output, docx_buffer = future.result()
+    
+                st.success("Blog Generated Successfully \n You can download it from Below")
+    
+                #creating a good file name for word document#
+                modified_filename=re.sub(r'[^a-zA-Z0-9\s]', '_', query)
+                modified_filename= "_".join(modified_filename.split())
+    
+    
+                st.download_button(
+                    label="📥 Download Blog as Word Document",
+                    data=docx_buffer,
+                    file_name=f"{modified_filename}.docx",
+                    mime="application/vnd.openxmlformats-officedocument.wordprocessingml.document")
 
-            st.success("Blog Generated Successfully")
-
-            #creating a good file name for word document#
-            modified_filename=re.sub(r'[^a-zA-Z0-9\s]', '_', query)
-            modified_filename= "_".join(modified_filename.split())
-
-
-            st.download_button(
-                label="📥 Download Blog as Word Document",
-                data=docx_buffer,
-                file_name=f"{modified_filename}.docx",
-                mime="application/vnd.openxmlformats-officedocument.wordprocessingml.document")
+            
+            except Exception as e:
+                st.error("❌ Something went wrong during blog generation.")
+                st.exception(e)
 
 
 st.subheader(f"Recent Cyber Attacks and Breaches 🛡️")
 for i, title in enumerate(titles[:30],1):
     st.write(f"🔴({i})--> {title}")
             
+
 
 

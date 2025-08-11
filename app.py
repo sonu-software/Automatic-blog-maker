@@ -53,22 +53,27 @@ import time
 ###############################################################################################################
 #All Models Which Were Used in this programs
 
-########embedding model#######################################
-#embedding_model_name = "sentence-transformers/all-MiniLM-L6-v2"
-#embedding_model_name ="BAAI/bge-base-en-v1.5"
-#model_sentence = SentenceTransformer(embedding_model_name)
-
-model_sentence = GoogleGenerativeAIEmbeddings(model="models/embedding-001")
-
-#compression and reranker model of the embedding
-cross_encoder_model = HuggingFaceCrossEncoder(model_name="BAAI/bge-reranker-base",model_kwargs={"device": "cpu"})
-compressor = CrossEncoderReranker(model=cross_encoder_model, top_n=8)
-
 #LLM MOdel "GEMINI"
-API_KEY=os.getenv("GEMINI_API_KEY")
-
+API_KEY=st.secrets["GEMINI_API_KEY"]
 genai.configure(api_key=API_KEY)
 model= genai.GenerativeModel("gemini-2.0-flash")
+
+
+
+########embedding model#######################################
+#embedding_model_name = "sentence-transformers/all-MiniLM-L6-v2"
+@st.cache_resource
+def load_model():
+    embedding_model_name ="BAAI/bge-base-en-v1.5"
+    model_sentence = SentenceTransformer(embedding_model_name)
+    
+    #compression and reranker model of the embedding
+    cross_encoder_model = HuggingFaceCrossEncoder(model_name="BAAI/bge-reranker-base",model_kwargs={"device": "cpu"})
+    compressor = CrossEncoderReranker(model=cross_encoder_model, top_n=8)
+    return model_sentence, compressor
+
+model_sentence, compressor= load_model()
+
 
 #################################################################################################################
 class EmbeddingModel(Embeddings):
@@ -399,6 +404,7 @@ st.subheader(f"Recent Cyber Attacks and Breaches 🛡️")
 for i, title in enumerate(titles[:30],1):
     st.write(f"{i}.🔴- {title}")
             
+
 
 
 

@@ -25,11 +25,13 @@ from pydantic import BaseModel,Field
 
 import asyncio
 
-from selenium import webdriver
-from selenium.webdriver.chrome.service import Service
-from selenium.webdriver.common.by import By
+#from selenium import webdriver
+#from selenium.webdriver.chrome.service import Service
+#from selenium.webdriver.common.by import By
+#from selenium.common.exceptions import WebDriverException
 
-from selenium.common.exceptions import WebDriverException
+import requests
+from bs4 import BeautifulSoup
 import urllib3.exceptions
 
 from docx import Document
@@ -97,6 +99,39 @@ titles = [entry.title for entry in feed.entries]
 
 urls=[]
 def extract_text_url(urls):
+    print(f"Searching For {query} on WEB.....") 
+
+    content = []
+    for url in urls[:6]:
+        try:
+            response = requests.get(url, timeout=10, headers={
+                "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64)"
+            })
+            time.sleep(4) 
+            
+            if response.status_code == 200:
+                soup = BeautifulSoup(response.text, 'html.parser')
+                
+                # Extract visible body text
+                body = soup.body.get_text(separator=' ', strip=True) if soup.body else ''
+                content.append(body)
+            else:
+                print(f"Failed to retrieve {url} with status code: {response.status_code}")
+
+        except urllib3.exceptions.SSLError as e:
+            print(f"SSL error occurred:{url}:- {e}")
+        except requests.exceptions.RequestException as e:
+            print(f"Request error:{url}:- {e}")
+        except Exception as e:
+            print(f"General error:{url}:- {e}")
+
+    text = ''.join(content)
+    cleaned_text = re.sub(r'\s+', ' ', text).strip()
+    return cleaned_text
+
+#################################################################################################################################################################
+'''
+def extract_text_url(urls):
     # Setup ChromeDriver
     options = webdriver.ChromeOptions()
     options.add_argument("--headless")  # Run in background (no GUI)
@@ -140,7 +175,8 @@ def extract_text_url(urls):
         print("extraction failed")
     return cleaned_text
 
-
+'''
+#################################################################################################################################################################
 
 def chunk_text(cleaned_text):
     text_splitter = RecursiveCharacterTextSplitter(
@@ -367,4 +403,5 @@ st.subheader(f"Recent Cyber Attacks and Breaches 🛡️")
 for i, title in enumerate(titles[:30],1):
     st.write(f"🔴({i})--> {title}")
             
+
 

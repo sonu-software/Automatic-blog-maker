@@ -460,6 +460,7 @@ if st.session_state.docx_buffer:
     {summary}
     Make sure the prompt captures key elements such as the nature of the attack, affected systems, and the overall atmosphere or mood 
     (e.g., urgency, threat, or technical complexity).
+    just give the prompt text only, nothing else.
     """
     image_text_prompt=model.generate_content(start_prompt)
     final_image_text_prompt=image_text_prompt.text
@@ -480,6 +481,7 @@ st.subheader(f"🛡️ Recent Cyber Attacks and Breaches 🛡️")
 for i, title in enumerate(titles,1):
     st.write(f"{i}.🔴- {title}")
             
+
 
 
 

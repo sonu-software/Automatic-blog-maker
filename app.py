@@ -407,7 +407,7 @@ if st.session_state.docx_buffer:
         data=st.session_state.docx_buffer,
         file_name=f"{modified_filename}.docx",
         mime="application/vnd.openxmlformats-officedocument.wordprocessingml.document")
-    if st.button("vIEW word file"):
+    if st.button("📄 VIEW word file"):
         try:
             doc = Document(st.session_state.docx_buffer)
             text_lines = [para.text for para in doc.paragraphs if para.text.strip()]
@@ -426,6 +426,7 @@ st.subheader(f"🛡️ Recent Cyber Attacks and Breaches 🛡️")
 for i, title in enumerate(titles,1):
     st.write(f"{i}.🔴- {title}")
             
+
 
 
 

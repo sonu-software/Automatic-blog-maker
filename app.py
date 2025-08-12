@@ -92,7 +92,7 @@ class EmbeddingModel(Embeddings):
 st.title("CYBER-SRC LABS")
 st.header("Automatic Blog Maker")
 
-query= st.text_input("type your blog name")
+query= st.text_input("Type Your Blog Name",placeholder="e.g., Major Data Breach in 2025")
 
 
 ################################################################################################
@@ -426,6 +426,7 @@ st.subheader(f"🛡️ Recent Cyber Attacks and Breaches 🛡️")
 for i, title in enumerate(titles,1):
     st.write(f"{i}.🔴- {title}")
             
+
 
 
 

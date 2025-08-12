@@ -89,7 +89,8 @@ class EmbeddingModel(Embeddings):
 
 ################################################################################################
 
-st.title("Automatic Blog Maker")
+st.title("CYBER-SRC LABS")
+st.header("Automatic Blog Maker")
 
 query= st.text_input("type your blog name")
 
@@ -365,8 +366,13 @@ def blocking_main(query):
     except Exception as e:
         st.error(f"❌ Error in blocking_main(): {e}")
         raise
+############################################################################################################################
+########### To hold the generated document, when clicked######################################################
+if "docx_buffer" not in st.session_state:
+    st.session_state.docx_buffer = None
 
-
+if "text_output" not in st.session_state:
+    st.session_state.text_output = None
 
 
 
@@ -380,37 +386,47 @@ if st.button(f"Generate Blog.. ✍️"):
                 with concurrent.futures.ThreadPoolExecutor() as executor:
                     future = executor.submit(blocking_main, query)
                     text_output, docx_buffer = future.result()
-    
+                    
+                st.session_state.docx_buffer = docx_buffer
+                st.session_state.text_output = text_output
                 st.success("Blog Generated Successfully \n You can download it from Below")
     
-                #creating a good file name for word document#
-                modified_filename=re.sub(r'[^a-zA-Z0-9\s]', '_', query)
-                modified_filename= "_".join(modified_filename.split())
+            except Exception as e:
+                st.error("❌ Something went wrong during blog generation.")
+                st.exception(e) 
     
+    # Now show buttons only if blog was generated
+    if st.session_state.docx_buffer:
+        #creating a good file name for word document#
+        modified_filename=re.sub(r'[^a-zA-Z0-9\s]', '_', query)
+        modified_filename= "_".join(modified_filename.split())
+
     
-                st.download_button(
-                    label="📥 Download Blog as Word Document",
-                    data=docx_buffer,
-                    file_name=f"{modified_filename}.docx",
-                    mime="application/vnd.openxmlformats-officedocument.wordprocessingml.document")
-                if st.button("view word file"):
-                    try:
-                        content=docx_buffer
-                        st.text_area("Word File Preview", content,height=400,scrolling=True, disabled=True)
-                    except Exception as e:
-                        st.error(f"Error reading file: {e}")
+        st.download_button(
+            label="📥 Download Blog as Word Document",
+            data=docx_buffer,
+            file_name=f"{modified_filename}.docx",
+            mime="application/vnd.openxmlformats-officedocument.wordprocessingml.document")
+        if st.button("view word file"):
+            try:
+                doc = Document(BytesIO(docx_buffer))
+                text_lines = [para.text for para in doc.paragraphs if para.text.strip()]
+                content = "\n".join(text_lines)
+
+                st.text_area("Word File Preview", content,height=400,scrolling=True, disabled=True)
+            except Exception as e:
+                st.error(f"Error reading file: {e}")
                 
 
             
-            except Exception as e:
-                st.error("❌ Something went wrong during blog generation.")
-                st.exception(e)
+            
 
 
 st.subheader(f"🛡️ Recent Cyber Attacks and Breaches 🛡️")
 for i, title in enumerate(titles,1):
     st.write(f"{i}.🔴- {title}")
             
+
 
 
 

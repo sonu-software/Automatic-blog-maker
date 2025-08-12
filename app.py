@@ -395,27 +395,27 @@ if st.button(f"Generate Blog.. ✍️"):
                 st.error("❌ Something went wrong during blog generation.")
                 st.exception(e) 
     
-    # Now show buttons only if blog was generated
-    if st.session_state.docx_buffer:
-        #creating a good file name for word document#
-        modified_filename=re.sub(r'[^a-zA-Z0-9\s]', '_', query)
-        modified_filename= "_".join(modified_filename.split())
+# Now show buttons only if blog was generated
+if st.session_state.docx_buffer:
+    #creating a good file name for word document#
+    modified_filename=re.sub(r'[^a-zA-Z0-9\s]', '_', query)
+    modified_filename= "_".join(modified_filename.split())
 
-    
-        st.download_button(
-            label="📥 Download Blog as Word Document",
-            data=docx_buffer,
-            file_name=f"{modified_filename}.docx",
-            mime="application/vnd.openxmlformats-officedocument.wordprocessingml.document")
-        if st.button("view word file"):
-            try:
-                doc = Document(BytesIO(docx_buffer))
-                text_lines = [para.text for para in doc.paragraphs if para.text.strip()]
-                content = "\n".join(text_lines)
 
-                st.text_area("Word File Preview", content,height=400,scrolling=True, disabled=True)
-            except Exception as e:
-                st.error(f"Error reading file: {e}")
+    st.download_button(
+        label="📥 Download Blog as Word Document",
+        data=docx_buffer,
+        file_name=f"{modified_filename}.docx",
+        mime="application/vnd.openxmlformats-officedocument.wordprocessingml.document")
+    if st.button("view word file"):
+        try:
+            doc = Document(BytesIO(docx_buffer))
+            text_lines = [para.text for para in doc.paragraphs if para.text.strip()]
+            content = "\n".join(text_lines)
+
+            st.text_area("Word File Preview", content,height=400,scrolling=True, disabled=True)
+        except Exception as e:
+            st.error(f"Error reading file: {e}")
                 
 
             
@@ -426,6 +426,7 @@ st.subheader(f"🛡️ Recent Cyber Attacks and Breaches 🛡️")
 for i, title in enumerate(titles,1):
     st.write(f"{i}.🔴- {title}")
             
+
 
 
 

@@ -393,6 +393,13 @@ if st.button(f"Generate Blog.. ✍️"):
                     data=docx_buffer,
                     file_name=f"{modified_filename}.docx",
                     mime="application/vnd.openxmlformats-officedocument.wordprocessingml.document")
+                if st.button("view word file"):
+                    try:
+                        content=docx_buffer
+                        st.text_area("Word File Preview", content,height=400,scrolling=True, disabled=True)
+                    except Exception as e:
+                        st.error(f"Error reading file: {e}")
+                
 
             
             except Exception as e:
@@ -404,6 +411,7 @@ st.subheader(f"🛡️ Recent Cyber Attacks and Breaches 🛡️")
 for i, title in enumerate(titles,1):
     st.write(f"{i}.🔴- {title}")
             
+
 
 
 

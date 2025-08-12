@@ -401,13 +401,13 @@ if st.session_state.docx_buffer:
     modified_filename=re.sub(r'[^a-zA-Z0-9\s]', '_', query)
     modified_filename= "_".join(modified_filename.split())
 
-
+    st.markdown(f"🟩Ready to download:🟩`{modified_filename}.docx`")
     st.download_button(
-        label="📥 Download Blog as Word Document",
+        label="⬇️ DOWNLOAD Blog as Word Document(.docx)",
         data=st.session_state.docx_buffer,
         file_name=f"{modified_filename}.docx",
         mime="application/vnd.openxmlformats-officedocument.wordprocessingml.document")
-    if st.button("view word file"):
+    if st.button("vIEW word file"):
         try:
             doc = Document(st.session_state.docx_buffer)
             text_lines = [para.text for para in doc.paragraphs if para.text.strip()]
@@ -426,6 +426,7 @@ st.subheader(f"🛡️ Recent Cyber Attacks and Breaches 🛡️")
 for i, title in enumerate(titles,1):
     st.write(f"{i}.🔴- {title}")
             
+
 
 
 

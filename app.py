@@ -261,12 +261,12 @@ def create_formatted_doc_from_markdown(text_output):
     # Title (##)
     title_style = styles.add_style('CustomTitle', WD_STYLE_TYPE.PARAGRAPH)
     title_style.font.name = 'Times New Roman'
-    title_style.font.size = Pt(28)
+    title_style.font.size = Pt(36)
     title_style.font.bold = True
 
     # Main Heading (###)
     main_heading_style = styles.add_style('CustomMainHeading', WD_STYLE_TYPE.PARAGRAPH)
-    main_heading_style.font.size = Pt(18)
+    main_heading_style.font.size = Pt(20)
     main_heading_style.font.bold = True
 
     # Subheading (** text **)
@@ -430,6 +430,7 @@ st.subheader(f"🛡️ Recent Cyber Attacks and Breaches 🛡️")
 for i, title in enumerate(titles,1):
     st.write(f"{i}.🔴- {title}")
             
+
 
 
 

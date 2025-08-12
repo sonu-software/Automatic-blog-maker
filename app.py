@@ -259,7 +259,7 @@ def create_formatted_doc_from_markdown(text_output):
     # Title (##)
     title_style = styles.add_style('CustomTitle', WD_STYLE_TYPE.PARAGRAPH)
     title_style.font.name = 'Times New Roman'
-    title_style.font.size = Pt(25)
+    title_style.font.size = Pt(28)
     title_style.font.bold = True
 
     # Main Heading (###)
@@ -286,9 +286,11 @@ def create_formatted_doc_from_markdown(text_output):
         # Title
         if stripped.startswith("## "):
             doc.add_paragraph(stripped[3:].strip(), style='CustomTitle')
+            doc.add_paragraph("")
 
         # Main Heading
         elif stripped.startswith("### "):
+            doc.add_paragraph("")
             doc.add_paragraph("")
             doc.add_paragraph(stripped[4:].strip(), style='CustomMainHeading')
 
@@ -426,6 +428,7 @@ st.subheader(f"🛡️ Recent Cyber Attacks and Breaches 🛡️")
 for i, title in enumerate(titles,1):
     st.write(f"{i}.🔴- {title}")
             
+
 
 
 

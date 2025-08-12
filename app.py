@@ -235,7 +235,9 @@ def get_llm_response(query,reranked_text):
         
         ### Remediation Steps(in bulletin points): 
         body text
-        
+
+        If the content suggests any other relevant subheadings, add them appropriately.
+        Use clear, professional language suitable for cybersecurity readers.
         Source Material:
         {reranked_text}
         """
@@ -428,6 +430,7 @@ st.subheader(f"🛡️ Recent Cyber Attacks and Breaches 🛡️")
 for i, title in enumerate(titles,1):
     st.write(f"{i}.🔴- {title}")
             
+
 
 
 

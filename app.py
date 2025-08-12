@@ -237,6 +237,7 @@ def get_llm_response(query,reranked_text):
         body text
 
         If the content suggests any other relevant subheadings, add them appropriately.
+        Also Feel Free to Rename or change the Subheadings, as needed to better fit the topic.
         Use clear, professional language suitable for cybersecurity readers.
         Source Material:
         {reranked_text}
@@ -430,6 +431,7 @@ st.subheader(f"🛡️ Recent Cyber Attacks and Breaches 🛡️")
 for i, title in enumerate(titles,1):
     st.write(f"{i}.🔴- {title}")
             
+
 
 
 

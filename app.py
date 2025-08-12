@@ -404,12 +404,12 @@ if st.session_state.docx_buffer:
 
     st.download_button(
         label="📥 Download Blog as Word Document",
-        data=docx_buffer,
+        data=st.session_state.docx_buffer,
         file_name=f"{modified_filename}.docx",
         mime="application/vnd.openxmlformats-officedocument.wordprocessingml.document")
     if st.button("view word file"):
         try:
-            doc = Document(BytesIO(docx_buffer))
+            doc = Document(BytesIO(st.session_state.docx_buffer))
             text_lines = [para.text for para in doc.paragraphs if para.text.strip()]
             content = "\n".join(text_lines)
 
@@ -426,6 +426,7 @@ st.subheader(f"🛡️ Recent Cyber Attacks and Breaches 🛡️")
 for i, title in enumerate(titles,1):
     st.write(f"{i}.🔴- {title}")
             
+
 
 
 

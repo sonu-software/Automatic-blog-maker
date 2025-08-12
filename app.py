@@ -99,8 +99,10 @@ st.title("CYBER-SRC LABS")
 st.header("Automatic Blog Maker")
 
 query= st.text_input("Type Your Blog Name",placeholder="e.g., Major Data Breach in 2025")
-summary=""
 
+
+
+start_summary=[]
 ################################################################################################
 #rss_url1 = "https://news.google.com/rss/search?q=Recently+cybersecurity+breaches+OR+cyber+attacks&hl=en-US&gl=US&ceid=US:en"
 rss_url="""https://news.google.com/rss/search?q="data+breach"+OR+"cyber+attack"+OR+ransomware+OR+"security+incident"&hl=en-US&gl=US&ceid=US:en"""
@@ -249,11 +251,11 @@ def get_llm_response(query,reranked_text):
         """
     
         output= model.generate_content(prompt)
-        summary+= output.text[:600]
+        start_summary.append(output.text[:600])
         return output.text
 
     except Exception as e:
-        st.error("❌ Error in get_llm_response():", e)
+        st.error(f"❌ Error in get_llm_response():  {e}")
         raise
 
 
@@ -383,6 +385,7 @@ def main(query):
         reranked_text= generate_knowledge_base(query)
         print(reranked_text)
         text_output= get_llm_response(query,reranked_text)
+        summary= text_output[:600]
 
         docx_buffer=create_formatted_doc_from_markdown(text_output)
         return text_output, docx_buffer
@@ -451,7 +454,7 @@ if st.session_state.docx_buffer:
             st.text_area("Word File Preview", content,height=400, disabled=True)
         except Exception as e:
             st.error(f"Error reading file: {e}")
-
+    summary=" ".join(start_summary)
     start_prompt=f"""You are an expert cybersecurity image-generation prompt creator.
     Your task is to craft a vivid, detailed, and visually compelling prompt for an AI image generator based on the following cyberattack summary:
     {summary}
@@ -477,6 +480,7 @@ st.subheader(f"🛡️ Recent Cyber Attacks and Breaches 🛡️")
 for i, title in enumerate(titles,1):
     st.write(f"{i}.🔴- {title}")
             
+
 
 
 

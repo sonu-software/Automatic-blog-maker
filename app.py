@@ -29,6 +29,8 @@ import google.generativeai as genai
 from google.generativeai import types
 from pydantic import BaseModel,Field
 
+from PIL import Image
+
 
 import asyncio
 
@@ -57,6 +59,10 @@ import time
 API_KEY=st.secrets["GEMINI_API_KEY"]
 genai.configure(api_key=API_KEY)
 model= genai.GenerativeModel("gemini-2.0-flash")
+#################################################################################################################
+MODEL = "stabilityai/stable-diffusion-xl-base-1.0"
+API_URL = f"https://api-inference.huggingface.co/models/{MODEL}"
+headers = {"Authorization": f"Bearer {st.secrets['hf_token']}"}
 
 
 
@@ -93,7 +99,7 @@ st.title("CYBER-SRC LABS")
 st.header("Automatic Blog Maker")
 
 query= st.text_input("Type Your Blog Name",placeholder="e.g., Major Data Breach in 2025")
-
+summary=""
 
 ################################################################################################
 #rss_url1 = "https://news.google.com/rss/search?q=Recently+cybersecurity+breaches+OR+cyber+attacks&hl=en-US&gl=US&ceid=US:en"
@@ -101,8 +107,7 @@ rss_url="""https://news.google.com/rss/search?q="data+breach"+OR+"cyber+attack"+
 
 feed = feedparser.parse(rss_url)
 titles = [entry.title for entry in feed.entries]
-
-
+#############################################################################
 
 
 
@@ -244,11 +249,34 @@ def get_llm_response(query,reranked_text):
         """
     
         output= model.generate_content(prompt)
+        summary+= output.text[:600]
         return output.text
 
     except Exception as e:
         st.error("❌ Error in get_llm_response():", e)
         raise
+
+
+########### image generation function########################################
+def generate_image(prompt):
+    try:
+        payload = {"inputs": prompt}
+        response = requests.post(API_URL, headers=headers, json=payload)
+        
+        if response.status_code != 200:
+            st.error(f"Failed to generate image. Status code: {response.status_code}")
+            st.error(response.text)
+            return None
+        return Image.open(BytesIO(response.content))
+    except Exception as e:
+        st.error("❌ Error in generating image:", e)
+        raise
+
+
+
+
+
+
 
 
 
@@ -412,6 +440,8 @@ if st.session_state.docx_buffer:
         data=st.session_state.docx_buffer,
         file_name=f"{modified_filename}.docx",
         mime="application/vnd.openxmlformats-officedocument.wordprocessingml.document")
+
+    
     if st.button("📄 VIEW word file"):
         try:
             doc = Document(st.session_state.docx_buffer)
@@ -421,7 +451,23 @@ if st.session_state.docx_buffer:
             st.text_area("Word File Preview", content,height=400, disabled=True)
         except Exception as e:
             st.error(f"Error reading file: {e}")
-                
+
+    start_prompt=f"""You are an expert cybersecurity image-generation prompt creator.
+    Your task is to craft a vivid, detailed, and visually compelling prompt for an AI image generator based on the following cyberattack summary:
+    {summary}
+    Make sure the prompt captures key elements such as the nature of the attack, affected systems, and the overall atmosphere or mood 
+    (e.g., urgency, threat, or technical complexity).
+    """
+    image_text_prompt=model.generate_content(start_prompt)
+    final_image_text_prompt=image_text_prompt.text
+
+    if st.button("CREATE AI-Generated Image"):
+        with st.spinner("Generating image... please wait"):
+            img = generate_image(final_image_text_prompt)
+            if img:
+                st.image(img, caption=final_image_text_prompt, use_column_width=True)
+
+                    
 
             
             
@@ -431,6 +477,7 @@ st.subheader(f"🛡️ Recent Cyber Attacks and Breaches 🛡️")
 for i, title in enumerate(titles,1):
     st.write(f"{i}.🔴- {title}")
             
+
 
 
 

@@ -413,7 +413,7 @@ if st.session_state.docx_buffer:
             text_lines = [para.text for para in doc.paragraphs if para.text.strip()]
             content = "\n".join(text_lines)
 
-            st.text_area("Word File Preview", content,height=400,scrolling=True, disabled=True)
+            st.text_area("Word File Preview", content,height=400, disabled=True)
         except Exception as e:
             st.error(f"Error reading file: {e}")
                 
@@ -426,6 +426,7 @@ st.subheader(f"🛡️ Recent Cyber Attacks and Breaches 🛡️")
 for i, title in enumerate(titles,1):
     st.write(f"{i}.🔴- {title}")
             
+
 
 
 

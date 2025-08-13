@@ -468,14 +468,17 @@ if st.session_state.docx_buffer:
     image_text_prompt=model2.generate_content(start_prompt)
     final_image_text_prompt=image_text_prompt.text
     
-    st.write(f"***Final_text_prompt***:----- {final_image_text_prompt} \n ***SUMMARY***:-------{summary}")
+    st.write(f"Final_text_prompt:----- {final_image_text_prompt} \n SUMMARY:-------{summary}")
     if st.button("CREATE AI-Generated Image"):
         try:
-            with st.spinner("Generating image... please wait..."):
-                img = generate_image(final_image_text_prompt)
-                if img:
-                    st.image(img, caption=final_image_text_prompt, use_column_width=True)
-                    start_summary.clear()
+            image_query= st.text_input("Write your image prompt", value=final_image_text_prompt)
+            if st.button("GENERATE NOW"):
+                if image_query:
+                    with st.spinner("Generating image... please wait..."):
+                        img = generate_image(image_query)
+                        if img:
+                            st.image(img, caption=final_image_text_prompt,  use_container_width=True)
+                            start_summary.clear()
         except Exception as e:
             st.error(f"An error occurred in creating image: {e}")
             
@@ -483,6 +486,7 @@ st.subheader(f"🛡️ Recent Cyber Attacks and Breaches 🛡️")
 for i, title in enumerate(titles,1):
     st.write(f"{i}.🔴- {title}")
             
+
 
 
 

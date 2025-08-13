@@ -11,7 +11,7 @@ from urllib3.util.retry import Retry
 from googlesearch import search
 import feedparser
 
-from langchain_google_genai import GoogleGenerativeAIEmbeddings
+#from langchain_google_genai import GoogleGenerativeAIEmbeddings
 
 from langchain_text_splitters import RecursiveCharacterTextSplitter
 from langchain_community.vectorstores import FAISS
@@ -59,6 +59,7 @@ import time
 API_KEY=st.secrets["GEMINI_API_KEY"]
 genai.configure(api_key=API_KEY)
 model= genai.GenerativeModel("gemini-2.0-flash")
+model2=genai.GenerativeModel("gemini-1.5-flash")
 #################################################################################################################
 MODEL = "stabilityai/stable-diffusion-xl-base-1.0"
 API_URL = f"https://api-inference.huggingface.co/models/{MODEL}"
@@ -251,7 +252,7 @@ def get_llm_response(query,reranked_text):
         """
     
         output= model.generate_content(prompt)
-        start_summary.append(output.text[:600])
+        start_summary.append(output.text[:700])
         return output.text
 
     except Exception as e:
@@ -456,20 +457,23 @@ if st.session_state.docx_buffer:
             st.error(f"Error reading file: {e}")
     summary=" ".join(start_summary)
     start_prompt=f"""You are an expert cybersecurity image-generation prompt creator.
-    Your task is to craft a vivid, detailed, and visually compelling prompt for an AI image generator based on the following cyberattack summary:
+    Your task is to craft a vivid, detailed, and visually compelling prompt for an AI image generator based on the following cyberattack title and summary:
     {summary}
     Make sure the prompt captures key elements such as the nature of the attack, affected systems, and the overall atmosphere or mood 
     (e.g., urgency, threat, or technical complexity).
     just give the prompt text only, nothing else.
     """
-    image_text_prompt=model.generate_content(start_prompt)
+    image_text_prompt=model2.generate_content(start_prompt)
     final_image_text_prompt=image_text_prompt.text
 
     if st.button("CREATE AI-Generated Image"):
-        with st.spinner("Generating image... please wait"):
-            img = generate_image(final_image_text_prompt)
-            if img:
-                st.image(img, caption=final_image_text_prompt, use_column_width=True)
+        try:
+            with st.spinner("Generating image... please wait"):
+                img = generate_image(final_image_text_prompt)
+                if img:
+                    st.image(img, caption=final_image_text_prompt, use_column_width=True)
+                    start_summary=[]
+                
 
                     
 
@@ -481,6 +485,7 @@ st.subheader(f"🛡️ Recent Cyber Attacks and Breaches 🛡️")
 for i, title in enumerate(titles,1):
     st.write(f"{i}.🔴- {title}")
             
+
 
 
 

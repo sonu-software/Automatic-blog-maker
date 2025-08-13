@@ -261,9 +261,9 @@ def get_llm_response(query,reranked_text):
 
 
 ########### image generation function########################################
-def generate_image(final_image_text_prompt):
+def generate_image(prompt):
     try:
-        payload = {"inputs": final_image_text_prompt}
+        payload = {"inputs": prompt}
         response_image = requests.post(API_URL, headers=headers, json=payload)
         
         if response_image.status_code != 200:
@@ -474,7 +474,7 @@ if st.session_state.docx_buffer:
             with st.spinner("Generating image... please wait..."):
                 img = generate_image(image_query)
                 if img:
-                    st.image(img, caption=final_image_text_prompt,  use_column_width=True)
+                    st.image(img, caption=image_query,  use_column_width=True)
                     start_summary.clear()
            
         except Exception as e:
@@ -484,6 +484,7 @@ st.subheader(f"🛡️ Recent Cyber Attacks and Breaches 🛡️")
 for i, title in enumerate(titles,1):
     st.write(f"{i}.🔴- {title}")
             
+
 
 
 

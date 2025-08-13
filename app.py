@@ -474,12 +474,15 @@ if st.session_state.docx_buffer:
         try:
             image_query= st.text_area("Write your image prompt", value=final_image_text_prompt)
             if st.button("GENERATE NOW"):
-                if image_query:
+                if image_query.strip():
                     with st.spinner("Generating image... please wait..."):
-                        img = generate_image(image_query)
-                        if img:
-                            st.image(img, caption=final_image_text_prompt,  use_container_width=True)
-                            start_summary.clear()
+                        try:
+                            img = generate_image(image_query)
+                            if img:
+                                st.image(img, caption=final_image_text_prompt,  use_column_width=True)
+                                start_summary.clear()
+                        except Exception as e:
+                            st.error(f"An Error Occured in genration of image: {e}")
         except Exception as e:
             st.error(f"An error occurred in creating image: {e}")
             
@@ -487,6 +490,7 @@ st.subheader(f"🛡️ Recent Cyber Attacks and Breaches 🛡️")
 for i, title in enumerate(titles,1):
     st.write(f"{i}.🔴- {title}")
             
+
 
 
 

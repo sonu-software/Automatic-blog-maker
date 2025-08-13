@@ -461,7 +461,7 @@ if st.session_state.docx_buffer:
 
     
     summary= " ".join(start_summary)
-    start_prompt=f"""You are an expert cybersecurity image-generation prompt creator, -just give the prompt text only, nothing else.
+    start_prompt=f"""You are an expert cybersecurity image-generation prompt creator, -just give a short (2 lines) prompt text only, nothing else.
     Your task is to craft a vivid, detailed, and visually compelling prompt for an AI image generator based on the following cyberattack title and summary:
     {summary}
     """
@@ -483,6 +483,7 @@ st.subheader(f"🛡️ Recent Cyber Attacks and Breaches 🛡️")
 for i, title in enumerate(titles,1):
     st.write(f"{i}.🔴- {title}")
             
+
 
 
 

@@ -461,8 +461,9 @@ if st.session_state.docx_buffer:
 
     
     summary= " ".join(start_summary)
-    start_prompt=f"""You are an expert cybersecurity image-generation prompt creator, -just give a short (2 lines) prompt text only, nothing else.
-    Your task is to craft a vivid, detailed, and visually compelling prompt for an AI image generator based on the following cyberattack title and summary:
+    start_prompt=f"""You are an expert cybersecurity image prompt designer. Your job is to create a rich, visually detailed, and highly descriptive prompt for an AI image generator.
+    Only return the image prompt text — no explanations, no headings.
+    Base your image prompt on the following cybersecurity blog title and summary:
     {summary}
     """
     image_text_prompt=model2.generate_content(start_prompt)
@@ -471,7 +472,7 @@ if st.session_state.docx_buffer:
     st.write(f"Final_text_prompt:----- {final_image_text_prompt} \n SUMMARY:-------{summary}")
     if st.button("CREATE AI-Generated Image"):
         try:
-            image_query= st.text_input("Write your image prompt", value=final_image_text_prompt)
+            image_query= st.text_area("Write your image prompt", value=final_image_text_prompt)
             if st.button("GENERATE NOW"):
                 if image_query:
                     with st.spinner("Generating image... please wait..."):
@@ -486,6 +487,7 @@ st.subheader(f"🛡️ Recent Cyber Attacks and Breaches 🛡️")
 for i, title in enumerate(titles,1):
     st.write(f"{i}.🔴- {title}")
             
+
 
 
 

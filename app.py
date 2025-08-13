@@ -459,9 +459,9 @@ if st.session_state.docx_buffer:
     start_prompt=f"""You are an expert cybersecurity image-generation prompt creator.
     Your task is to craft a vivid, detailed, and visually compelling prompt for an AI image generator based on the following cyberattack title and summary:
     {summary}
-    Make sure the prompt captures key elements such as the nature of the attack, affected systems, and the overall atmosphere or mood 
+    Make sure the prompt captures key elements such as the nature of the attack, affected systems, and the overall atmosphere or mood and also add the title related text inside the image. 
     (e.g., urgency, threat, or technical complexity).
-    just give the prompt text only, nothing else.
+    -just give the prompt text only, nothing else.
     """
     image_text_prompt=model2.generate_content(start_prompt)
     final_image_text_prompt=image_text_prompt.text
@@ -480,6 +480,7 @@ st.subheader(f"🛡️ Recent Cyber Attacks and Breaches 🛡️")
 for i, title in enumerate(titles,1):
     st.write(f"{i}.🔴- {title}")
             
+
 
 
 

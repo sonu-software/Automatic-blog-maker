@@ -468,23 +468,19 @@ if st.session_state.docx_buffer:
 
     if st.button("CREATE AI-Generated Image"):
         try:
-            with st.spinner("Generating image... please wait"):
+            with st.spinner("Generating image... please wait..."):
                 img = generate_image(final_image_text_prompt)
                 if img:
                     st.image(img, caption=final_image_text_prompt, use_column_width=True)
                     start_summary=[]
-                
-
-                    
-
+        except Exception as e:
+            st.error(f"An error occurred in creating image: {e}")
             
-            
-
-
 st.subheader(f"🛡️ Recent Cyber Attacks and Breaches 🛡️")
 for i, title in enumerate(titles,1):
     st.write(f"{i}.🔴- {title}")
             
+
 
 
 

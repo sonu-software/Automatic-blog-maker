@@ -97,7 +97,7 @@ class EmbeddingModel(Embeddings):
 ################################################################################################
 
 st.title("CYBER-SRC LABS")
-st.header("Automatic Blog Maker")
+st.header("AI-POWERED Blog Maker")
 
 query= st.text_input("Type Your Blog Name",placeholder="e.g., Major Data Breach in 2025")
 
@@ -472,7 +472,7 @@ if st.session_state.docx_buffer:
                 img = generate_image(final_image_text_prompt)
                 if img:
                     st.image(img, caption=final_image_text_prompt, use_column_width=True)
-                    start_summary=[]
+                    start_summary.clear()
         except Exception as e:
             st.error(f"An error occurred in creating image: {e}")
             
@@ -480,6 +480,7 @@ st.subheader(f"🛡️ Recent Cyber Attacks and Breaches 🛡️")
 for i, title in enumerate(titles,1):
     st.write(f"{i}.🔴- {title}")
             
+
 
 
 

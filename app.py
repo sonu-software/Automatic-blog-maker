@@ -95,7 +95,7 @@ class EmbeddingModel(Embeddings):
     
 
 ################################################################################################
-
+st.set_page_config(page_title="Cyber-SRC Blog Maker",page_icon="logo.png" ,layout="centered")
 st.title("CYBER-SRC LABS")
 st.header("AI-POWERED Blog Maker")
 
@@ -458,7 +458,6 @@ if st.session_state.docx_buffer:
 
 
 
-
     
     summary= " ".join(start_summary)
     start_prompt=f"""You are an expert cybersecurity image prompt designer. Your job is to create a rich, visually detailed, and highly descriptive prompt for an AI image generator.
@@ -484,6 +483,7 @@ st.subheader(f"🛡️ Recent Cyber Attacks and Breaches 🛡️")
 for i, title in enumerate(titles,1):
     st.write(f"{i}.🔴- {title}")
             
+
 
 
 

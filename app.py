@@ -386,7 +386,7 @@ def main(query):
         reranked_text= generate_knowledge_base(query)
         print(reranked_text)
         text_output= get_llm_response(query,reranked_text)
-        summary= text_output[:600]
+        summary= text_output[:1000]
 
         docx_buffer=create_formatted_doc_from_markdown(text_output)
         return text_output, docx_buffer
@@ -484,6 +484,7 @@ st.subheader(f"🛡️ Recent Cyber Attacks and Breaches 🛡️")
 for i, title in enumerate(titles,1):
     st.write(f"{i}.🔴- {title}")
             
+
 
 
 

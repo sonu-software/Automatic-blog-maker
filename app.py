@@ -292,23 +292,23 @@ def create_formatted_doc_from_markdown(text_output):
 
     # Title (##)
     title_style = styles.add_style('CustomTitle', WD_STYLE_TYPE.PARAGRAPH)
-    title_style.font.name = 'Times New Roman'
-    title_style.font.size = Pt(36)
+    title_style.font.name = 'Calibri'
+    title_style.font.size = Pt(16)
     title_style.font.bold = True
 
     # Main Heading (###)
     main_heading_style = styles.add_style('CustomMainHeading', WD_STYLE_TYPE.PARAGRAPH)
-    main_heading_style.font.size = Pt(20)
+    main_heading_style.font.size = Pt(14)
     main_heading_style.font.bold = True
 
     # Subheading (** text **)
     subheading_style = styles.add_style('CustomSubHeading', WD_STYLE_TYPE.PARAGRAPH)
-    subheading_style.font.size = Pt(16)
+    subheading_style.font.size = Pt(12)
     subheading_style.font.italic = True
 
     # Body text
     body_style = styles.add_style('CustomBody', WD_STYLE_TYPE.PARAGRAPH)
-    body_style.font.size = Pt(14)
+    body_style.font.size = Pt(12)
 
     lines = text_output.splitlines()
     for line in lines:
@@ -338,7 +338,7 @@ def create_formatted_doc_from_markdown(text_output):
             bullet_line = stripped[2:].strip()
             para = doc.add_paragraph(style='List Bullet')
 
-            if bullet_line.startswith("**"):
+            if bullet_line.startswith("**") or bullet_line.startswith(" **"):
                 # Match pattern like: **Bold Start:** rest of line
                 match = re.match(r'^\*\*(.+?)\*\*(.*)', bullet_line)
                 if match:
@@ -347,18 +347,18 @@ def create_formatted_doc_from_markdown(text_output):
 
                     run = para.add_run(bold_text)
                     run.bold = True
-                    run.font.size = Pt(14)
+                    run.font.size = Pt(12)
 
                     if rest_text:
                         run2 = para.add_run(" " + rest_text)
-                        run2.font.size = Pt(14)
+                        run2.font.size = Pt(12)
                 else:
                     # Just fallback as body text if not match
                     run = para.add_run(bullet_line)
-                    run.font.size = Pt(14)
+                    run.font.size = Pt(12)
             else:
                 run = para.add_run(bullet_line)
-                run.font.size = Pt(14)
+                run.font.size = Pt(12)
 
         # Body text
         else:
@@ -485,6 +485,7 @@ st.subheader(f"🛡️ Recent Cyber Attacks and Breaches 🛡️")
 for i, title in enumerate(titles,1):
     st.write(f"{i}.🔴- {title}")
             
+
 
 
 

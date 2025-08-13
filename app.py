@@ -261,16 +261,16 @@ def get_llm_response(query,reranked_text):
 
 
 ########### image generation function########################################
-def generate_image(prompt):
+def generate_image(final_image_text_prompt):
     try:
-        payload = {"inputs": prompt}
-        response = requests.post(API_URL, headers=headers, json=payload)
+        payload = {"inputs": final_image_text_prompt}
+        response_image = requests.post(API_URL, headers=headers, json=payload)
         
-        if response.status_code != 200:
-            st.error(f"Failed to generate image. Status code: {response.status_code}")
-            st.error(response.text)
+        if response_image.status_code != 200:
+            st.error(f"Failed to generate image. Status code: {response_image.status_code}")
+            st.error(response_image.text)
             return None
-        return Image.open(BytesIO(response.content))
+        return Image.open(BytesIO(response_image.content))
     except Exception as e:
         st.error("❌ Error in generating image:", e)
         raise
@@ -467,7 +467,8 @@ if st.session_state.docx_buffer:
     """
     image_text_prompt=model2.generate_content(start_prompt)
     final_image_text_prompt=image_text_prompt.text
-
+    
+    st.write(f"***Final_text_prompt***:----- {final_image_text_prompt} \n ***SUMMARY***:-------{summary}")
     if st.button("CREATE AI-Generated Image"):
         try:
             with st.spinner("Generating image... please wait..."):
@@ -482,42 +483,6 @@ st.subheader(f"🛡️ Recent Cyber Attacks and Breaches 🛡️")
 for i, title in enumerate(titles,1):
     st.write(f"{i}.🔴- {title}")
             
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 

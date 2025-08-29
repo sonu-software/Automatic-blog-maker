@@ -31,7 +31,6 @@ from pydantic import BaseModel,Field
 
 from PIL import Image
 
-
 import asyncio
 
 #from selenium import webdriver
@@ -483,6 +482,7 @@ st.subheader(f"🛡️ Recent Cyber Attacks and Breaches 🛡️")
 for i, title in enumerate(titles,1):
     st.write(f"{i}.🔴- {title}")
             
+
 
 
 

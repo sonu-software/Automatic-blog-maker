@@ -387,7 +387,7 @@ def main(query):
         
         for result in results.get("organic_results", []):
             url=result.get("link")
-            url.append(url)
+            urls.append(url)
 
 
 
@@ -497,6 +497,7 @@ st.subheader(f"🛡️ Recent Cyber Attacks and Breaches 🛡️")
 for i, title in enumerate(titles,1):
     st.write(f"{i}.🔴- {title}")
             
+
 
 
 

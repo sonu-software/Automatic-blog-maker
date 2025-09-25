@@ -238,6 +238,7 @@ def get_llm_response(query,reranked_text):
         
         ### Technical Description: 
         body text
+        include cve_id, vulnerability type, affected product, impact and other relevant details-(IoCs, detection rules)
         
         ### Impact Analysis: 
         body text
@@ -497,6 +498,7 @@ st.subheader(f"🛡️ Recent Cyber Attacks and Breaches 🛡️")
 for i, title in enumerate(titles,1):
     st.write(f"{i}.🔴- {title}")
             
+
 
 
 
